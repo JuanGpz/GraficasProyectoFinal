@@ -14,4 +14,4 @@ El usuario será capaz de controlar únicamente el salto del personaje, todo lo 
 
 •	Mecánicas
 
-El usuario controlará el salto del personaje usando la barra espaciadora de su teclado, el objetivo del juego es lograr el mayor puntaje posible evadiendo obstáculos que aparezcan en pantalla. El puntaje se acumulará por cada segundo que el usuario permanezca corriendo sin perder y perderá únicamente cuando el personaje colisione con algún obstáculo.
+El usuario controlará el salto del personaje usando la barra espaciadora de su teclado, el objetivo del juego es lograr el mayor puntaje posible evadiendo obstáculos que aparezcan en pantalla. El puntaje se acumulará por cada segundo que el usuario permanezca corriendo sin perder y perderá únicamente cuando el personaje colisione con algún obstáculo. De igual manera el usuario puede colisionar con objetos de recompensa para aumentar su puntaje.
