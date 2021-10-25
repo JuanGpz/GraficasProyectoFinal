@@ -242,9 +242,9 @@ function createScene(canvas)
     scene.add(ambientLight);
     
     // Create the objects
-    loadObj(objModelUrl1, objectList, 0, 0, 0, -1.55);
-    loadObj(objModelUrl2, objectList, 0, 0, 0, 0.1);
-    loadObj(objModelUrl3, objectList, 0, 0, 0, 0.1);
+    loadObj(objModelUrl1, objectList, -2, -4, 0, -1.55);
+    loadObj(objModelUrl2, objectList, 2, -4, 0, 0.15);
+    loadObj(objModelUrl3, objectList, 0, -10, 0, 0.1);
 
     // Create a group to hold the objects
     group = new THREE.Object3D;
