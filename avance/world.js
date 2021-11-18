@@ -9,6 +9,7 @@ export const world = (() => {
   //Indica la separación que hay entre obstaculos.
   const SEPARATION_DISTANCE = 10; 
 
+  // Constructor de la clase del mundo o mapa del juego, creando posición, rotación, escala y caja de colisión
   class WorldObject {
     constructor(params) {
       this.position = new THREE.Vector3();
@@ -19,25 +20,27 @@ export const world = (() => {
       this.LoadModel_();
     }
 
+    // Se cargan los modelos que usara el mapa
     LoadModel_() {
       const texLoader = new THREE.TextureLoader();
-      const texture = texLoader.load('./resources/DesertPack/Blend/Textures/Grass.png');
       texture.encoding = THREE.sRGBEncoding;
-
       const loader = new FBXLoader();
       loader.setPath('./resources/Forest/FBX/');
+
+      // Se carga el modelo de arbusto #2
       loader.load('Bush_2.fbx', (fbx) => {
         fbx.scale.setScalar(0.01);
-
         this.mesh = fbx;
         this.params_.scene.add(this.mesh);
       });
     }
 
+    // Se le agregan colliders al mesh
     UpdateCollider_() {
       this.collider.setFromObject(this.mesh);
     }
 
+    // Función de update para refrescar constamente los parametros de los meshes
     Update(timeElapsed) {
       if (!this.mesh) {
         return;
@@ -49,7 +52,9 @@ export const world = (() => {
     }
   }
 
+  
   class WorldManager {
+    // Constructor de la clase del manejas, creadon el mundo vacío en un principio
     constructor(params) {
       this.objects_ = [];
       this.unused_ = [];
@@ -60,10 +65,12 @@ export const world = (() => {
       this.separationDistance_ = SEPARATION_DISTANCE;
     }
 
+    // Usamos la función GetColliders en world.js para regresar los colliders de un objeto
     GetColliders() {
       return this.objects_;
     }
 
+    
     LastObjectPosition_() {
       if (this.objects_.length == 0) {
         return SEPARATION_DISTANCE;

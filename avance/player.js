@@ -74,13 +74,17 @@ export const player = (() => {
 
     // Función para revisar colisiones entre el jugador y los obstaculos
     CheckCollisions_() {
+
       // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
       const colliders = this.params_.world.GetColliders();
+
       // Usamos los colliders del mesh de nuestro personaje
       this.playerBox_.setFromObject(this.mesh_);
+
       // Comparamos los colliders del personaje con los colliders de los obstaculos
       for (let c of colliders) {
         const cur = c.collider;
+        
         // Si los colliders del jugador y de algun obstaculo se intersectan se despliega la pantalla de derrota
         if (cur.intersectsBox(this.playerBox_)) {
           this.gameOver = true;
@@ -90,17 +94,24 @@ export const player = (() => {
 
     // Función de update para el jugador
     Update(timeElapsed) {
+
       // Una vez que se presiona espacio para iniciar el juego se le da al jugador una velocidad para que comienze a moverse
       if (this.keys_.space && this.position_.y == 0.0) {
         // Variable para controlar la velocidad del personaje
         this.velocity_ = 35;
       }
+
+      // Variable que controla la aceleración del personaje
       const acceleration = -75 * timeElapsed;
+
+      // Modificamos la posición en Y para que el personaje simule un salto
       this.position_.y += timeElapsed * (
         this.velocity_ + acceleration * 0.5);
       this.position_.y = Math.max(this.position_.y, 0.0);
       this.velocity_ += acceleration;
       this.velocity_ = Math.max(this.velocity_, -100);
+
+      // Ciclo para mover continuamente al personaje mientras no colisione
       if (this.mesh_) {
         this.mixer_.update(timeElapsed);
         this.mesh_.position.copy(this.position_);
