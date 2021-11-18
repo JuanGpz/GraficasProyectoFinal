@@ -2,12 +2,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.mod
 import {math} from './math.js';
 import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/FBXLoader.js';
 
-export const world = (() => {
+export const world = (() => {{}
+  
   //Indica la posición a partir de la cuál empiezan a aparecer los obstaculos.
   const START_POS = 100;
-
+  
   //Indica la separación que hay entre obstaculos.
-  const SEPARATION_DISTANCE = 10; 
+  const SEPARATION_DISTANCE = 15;
 
   // Constructor de la clase del mundo o mapa del juego, creando posición, rotación, escala y caja de colisión
   class WorldObject {
@@ -19,10 +20,11 @@ export const world = (() => {
       this.params_ = params;
       this.LoadModel_();
     }
-
+    
     // Se cargan los modelos que usara el mapa
     LoadModel_() {
       const texLoader = new THREE.TextureLoader();
+      const texture = texLoader.load('./resources/Forest/Textures/Grass.png');
       texture.encoding = THREE.sRGBEncoding;
       const loader = new FBXLoader();
       loader.setPath('./resources/Forest/FBX/');
@@ -52,7 +54,6 @@ export const world = (() => {
     }
   }
 
-  
   class WorldManager {
     // Constructor de la clase del manejas, creadon el mundo vacío en un principio
     constructor(params) {
@@ -70,18 +71,19 @@ export const world = (() => {
       return this.objects_;
     }
 
-    
+    // Función para determinar la posición del ultimo objeto y saber cuando crear uno nuevo
     LastObjectPosition_() {
       if (this.objects_.length == 0) {
         return SEPARATION_DISTANCE;
       }
-
       return this.objects_[this.objects_.length - 1].position.x;
     }
 
+    // Función para eliminar los objetos que ya no se usarán y crear nuevos en el mapa
     SpawnObj_(scale, offset) {
       let obj = null;
 
+      // Dtermina cuando se crea el nuevo objeto
       if (this.unused_.length > 0) {
         obj = this.unused_.pop();
         obj.mesh.visible = true;
@@ -89,6 +91,7 @@ export const world = (() => {
         obj = new WorldObject(this.params_);
       }
 
+      // Determina la posición del nuevo objeto
       obj.quaternion.setFromAxisAngle(
           new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2.0);
       obj.position.x = START_POS + offset;
@@ -96,19 +99,23 @@ export const world = (() => {
       this.objects_.push(obj);
     }
 
+    // Función que crea clusters de 2 a 3 objetos
     SpawnCluster_() {
+      // Pueden tener distintas escalas
       const scaleIndex = math.rand_int(0, 1);
       const scales = [1, 0.5];
       const ranges = [2, 3];
       const scale = scales[scaleIndex];
       const numObjects = math.rand_int(1, ranges[scaleIndex]);
 
+      // Se usa la función de Spawn en loop para generar todos los objetos
       for (let i = 0; i < numObjects; ++i) {
         const offset = i * 1 * scale;
         this.SpawnObj_(scale, offset);
       }
     }
 
+    // Función que crea obstaculos con distancias de separación aleatorias.
     MaybeSpawn_() {
       const closest = this.LastObjectPosition_();
       if (Math.abs(START_POS - closest) > this.separationDistance_) {
@@ -117,12 +124,14 @@ export const world = (() => {
       }
     }
 
+    // Función de update para las funciones que crean objetos
     Update(timeElapsed) {
       this.MaybeSpawn_();
       this.UpdateColliders_(timeElapsed);
       this.UpdateScore_(timeElapsed);
     }
 
+    // Función que actualiza la puntuación en una tasa de 10 puntos por segundo
     UpdateScore_(timeElapsed) {
       this.score_ += timeElapsed * 10.0;
       const scoreText = Math.round(this.score_).toLocaleString(
@@ -133,9 +142,12 @@ export const world = (() => {
       document.getElementById('score-text').innerText = scoreText;
     }
 
+    // Función que actualiza los colliders de los objetos en la vista
     UpdateColliders_(timeElapsed) {
       const invisible = [];
       const visible = [];
+
+      // Los objetos fuera de vista se hacen invisibles mientras las que están en la vista son visibles.
       for (let obj of this.objects_) {
         obj.position.x -= timeElapsed * this.speed_;
         if (obj.position.x < -20) {
@@ -154,5 +166,4 @@ export const world = (() => {
   return {
       WorldManager: WorldManager,
   };
-
 })();

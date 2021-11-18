@@ -114,6 +114,7 @@ const _PCSSGetShadow = `
 return PCSS( shadowMap, shadowCoord );
 `;
 
+// Clase para crear el mundo del juego
 class BasicWorldDemo {
   constructor() {
     this._Initialize();
@@ -170,6 +171,7 @@ class BasicWorldDemo {
 
     this.scene_ = new THREE.Scene();
 
+    // Controles de la luz direccional
     let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
     light.position.set(60, 100, 10);
     light.target.position.set(40, 0, 0);

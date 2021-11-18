@@ -8,6 +8,7 @@ import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/l
 
 export const background = (() => {
 
+  // Clase de nube con constructor que designa su posición, rotación, escala y carga el modelo
   class BackgroundCloud {
     constructor(params) {
       this.params_ = params;
@@ -19,16 +20,14 @@ export const background = (() => {
       this.LoadModel_();
     }
 
+    // Loader para el modelo de nube que elige uno de los tres modelos al azar asi como su escala
     LoadModel_() {
       const loader = new GLTFLoader();
       loader.setPath('./resources/Clouds/GLTF/');
-
-      // Carga uno de los tres modelos de nube al azar
       loader.load('Cloud' + math.rand_int(1, 3) + '.glb', (glb) => {
         this.mesh_ = glb.scene;
         this.params_.scene.add(this.mesh_);
 
-        // Variables que determinan al azar la posición y el tamaño de las nubes
         this.position_.x = math.rand_range(0, 2000);
         this.position_.y = math.rand_range(100, 200);
         this.position_.z = math.rand_range(500, -1000);
@@ -40,11 +39,13 @@ export const background = (() => {
       });
     }
 
+    // Clase de update para mover las nubes en dirección horizontal
     Update(timeElapsed) {
       if (!this.mesh_) {
         return;
       }
 
+      // Movimiento de las nubes
       this.position_.x -= timeElapsed * 10;
       if (this.position_.x < -100) {
         this.position_.x = math.rand_range(2000, 3000);
@@ -56,87 +57,16 @@ export const background = (() => {
     }
   };
 
-  class BackgroundCrap {
-    constructor(params) {
-      this.params_ = params;
-      this.position_ = new THREE.Vector3();
-      this.quaternion_ = new THREE.Quaternion();
-      this.scale_ = 1.0;
-      this.mesh_ = null;
-
-      this.LoadModel_();
-    }
-
-    LoadModel_() {
-      const assets = [
-          ['Frog.fbx', 'Grass.png', 3],
-      ];
-      const [asset, textureName, scale] = assets[math.rand_int(0, assets.length - 1)];
-
-      const texLoader = new THREE.TextureLoader();
-      const texture = texLoader.load('./resources/Frog/Textures/' + textureName);
-      texture.encoding = THREE.sRGBEncoding;
-
-      const loader = new FBXLoader();
-      loader.setPath('./resources/Frog/FBX/');
-      loader.load(asset, (fbx) => {
-        this.mesh_ = fbx.scene;
-        this.params_.scene.add(this.mesh_);
-
-        this.position_.x = math.rand_range(0, 2000);
-        this.position_.z = math.rand_range(500, -1000);
-        this.scale_ = scale;
-
-        const q = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0), math.rand_range(0, 360));
-        this.quaternion_.copy(q);
-
-        this.mesh_.traverse(c => {
-          let materials = c.material;
-          if (!(c.material instanceof Array)) {
-            materials = [c.material];
-          }
-  
-          for (let m of materials) {
-            if (m) {
-              if (texture) {
-                m.map = texture;
-              }
-              m.specular = new THREE.Color(0x000000);
-            }
-          }    
-          c.castShadow = true;
-          c.receiveShadow = true;
-        });
-      });
-    }
-
-    Update(timeElapsed) {
-      if (!this.mesh_) {
-        return;
-      }
-
-      this.position_.x -= timeElapsed * 10;
-      if (this.position_.x < -100) {
-        this.position_.x = math.rand_range(2000, 3000);
-      }
-
-      this.mesh_.position.copy(this.position_);
-      this.mesh_.quaternion.copy(this.quaternion_);
-      this.mesh_.scale.setScalar(this.scale_);
-    }
-  };
-
+  // Constructor de la clase de background que tiene un conjunto de nubes
   class Background {
     constructor(params) {
       this.params_ = params;
       this.clouds_ = [];
-      this.crap_ = [];
 
       this.SpawnClouds_();
-      this.SpawnCrap_();
     }
 
+    // Crea las nubes en el background siempre y cuando haya menos de 25
     SpawnClouds_() {
       for (let i = 0; i < 25; ++i) {
         const cloud = new BackgroundCloud(this.params_);
@@ -145,19 +75,9 @@ export const background = (() => {
       }
     }
 
-    SpawnCrap_() {
-      for (let i = 0; i < 50; ++i) {
-        const crap = new BackgroundCrap(this.params_);
-
-        this.crap_.push(crap);
-      }
-    }
-
+    // Función de update para las nubes
     Update(timeElapsed) {
       for (let c of this.clouds_) {
-        c.Update(timeElapsed);
-      }
-      for (let c of this.crap_) {
         c.Update(timeElapsed);
       }
     }

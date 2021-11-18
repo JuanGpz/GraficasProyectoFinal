@@ -98,7 +98,7 @@ export const player = (() => {
       // Una vez que se presiona espacio para iniciar el juego se le da al jugador una velocidad para que comienze a moverse
       if (this.keys_.space && this.position_.y == 0.0) {
         // Variable para controlar la velocidad del personaje
-        this.velocity_ = 35;
+        this.velocity_ = 30;
       }
 
       // Variable que controla la aceleración del personaje

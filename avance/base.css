@@ -61,7 +61,7 @@ body {
 /* Estilo para el marcador de puntos dentro del juego */
 
 .score-text {
-  font-size: 3;
+  font-size: 15;
   color: white;
   padding: 2;
 }
