@@ -65,7 +65,7 @@ export const player = (() => {
 
       // Se agregan listeners para detectar cuando se presiona la tecla
       document.addEventListener('keydown', (e) => this.RightKeyDown_(e), false);
-      document.addEventListener('keyup', (e) => this.RightKeyUp_(e), true);
+      document.addEventListener('keyup', (e) => this.RightKeyUp_(e), false);
     }
 
     LeftInput_() {
@@ -77,7 +77,7 @@ export const player = (() => {
 
       // Se agregan listeners para detectar cuando se presiona la tecla
       document.addEventListener('keydown', (e) => this.LeftKeyDown_(e), false);
-      document.addEventListener('keyup', (e) => this.LeftKeyUp_(e), true);
+      document.addEventListener('keyup', (e) => this.LeftKeyUp_(e), false);
     }
 
     // Switch para realizar un evento cuando se presiona la tecla
@@ -202,31 +202,27 @@ export const player = (() => {
       const acceleration = -75 * timeElapsed;
       
       // Modificamos la posición en Y para que el personaje simule un salto
-      this.position_.y += timeElapsed * (
-      this.velocity_ + acceleration * 0.5);
+      this.position_.y += timeElapsed * (this.velocity_ + acceleration * 0.5);
       this.position_.y = Math.max(this.position_.y, 0.0);
       this.velocity_ += acceleration;
       this.velocity_ = Math.max(this.velocity_, -100);
       
       // Una vez que se presiona espacio para iniciar el juego se le da al jugador una velocidad para que comienze a moverse
-      if (this.keys_.ArrowRight && this.position_.z == 0) {
+      if (this.keys_.ArrowRight) {
         // Variable para controlar la velocidad del personaje
-        this.position_.z = 5;
+        if (this.position_.z < 5) {
+          this.position_.z += 5;
+          this.keys_.ArrowRight = false
+        }
+        // this.position_.z = 5;
       }
 
-      if (this.keys_.ArrowRight && this.position_.z == -5) {
+      if (this.keys_.ArrowLeft == true) {
         // Variable para controlar la velocidad del personaje
-        this.position_.z = 0;
-      }
-
-      if (this.keys_.ArrowLeft && this.position_.z == 0) {
-        // Variable para controlar la velocidad del personaje
-        this.position_.z = -5;
-      }
-
-      if (this.keys_.ArrowLeft && this.position_.z == 5) {
-        // Variable para controlar la velocidad del personaje
-        this.position_.z = 0;
+        if (this.position_.z > -5) {
+          this.position_.z -= 5;
+          this.keys_.ArrowLeft = false
+        }
       }
       
       // // Modificamos la posición en Y para que el personaje simule un salto
