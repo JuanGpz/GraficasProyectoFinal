@@ -40,6 +40,27 @@ export const player = (() => {
           const action = this.mixer_.clipAction(clip);
           action.play();
         }
+        fbx.traverse(c => {
+          if (c.geometry) {
+            c.geometry.computeBoundingBox();
+          }
+
+          let materials = c.material;
+          if (!(c.material instanceof Array)) {
+            materials = [c.material];
+          }
+  
+          for (let m of materials) {
+            if (m) {
+              if (texture) {
+                m.map = texture;
+              }
+              m.specular = new THREE.Color(0x000000);
+            }
+          }    
+          c.castShadow = true;
+          c.receiveShadow = true;
+        });
       });
     }
 

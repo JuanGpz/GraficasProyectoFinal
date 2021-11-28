@@ -34,6 +34,20 @@ export const lane1 = (() => {{}
         fbx.scale.setScalar(0.01);
         this.mesh = fbx;
         this.params_.scene.add(this.mesh);
+        fbx.traverse(c => {
+          let materials = c.material;
+          if (!(c.material instanceof Array)) {
+            materials = [c.material];
+          }
+          for (let m of materials) {
+            if (m) {
+              if (texture) {
+                m.map = texture;
+              }
+              m.specular = new THREE.Color(0x000000);
+            }
+          }
+        });
       });
     }
 

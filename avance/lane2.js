@@ -29,11 +29,26 @@ export const lane2 = (() => {{}
       const loader = new FBXLoader();
       loader.setPath('./resources/Forest/FBX/');
 
+
       // Se carga el modelo de arbusto #2
       loader.load('Bush_2.fbx', (fbx) => {
         fbx.scale.setScalar(0.01);
         this.mesh = fbx;
         this.params_.scene.add(this.mesh);
+        fbx.traverse(c => {
+          let materials = c.material;
+          if (!(c.material instanceof Array)) {
+            materials = [c.material];
+          }
+          for (let m of materials) {
+            if (m) {
+              if (texture) {
+                m.map = texture;
+              }
+              m.specular = new THREE.Color(0x000000);
+            }
+          }
+        });
       });
     }
 
