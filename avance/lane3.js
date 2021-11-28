@@ -61,8 +61,6 @@ export const lane3 = (() => {{}
       this.unused_ = [];
       this.speed_ = 12;
       this.params_ = params;
-      this.score_ = 0.0;
-      this.scoreText_ = '00000';
       this.separationDistance_ = SEPARATION_DISTANCE;
     }
 
@@ -129,18 +127,6 @@ export const lane3 = (() => {{}
     Update(timeElapsed) {
       this.MaybeSpawn_();
       this.UpdateColliders_(timeElapsed);
-      this.UpdateScore_(timeElapsed);
-    }
-
-    // Función que actualiza la puntuación en una tasa de 10 puntos por segundo
-    UpdateScore_(timeElapsed) {
-      this.score_ += timeElapsed * 10.0;
-      const scoreText = Math.round(this.score_).toLocaleString(
-          'en-US', {minimumIntegerDigits: 5, useGrouping: false});
-      if (scoreText == this.scoreText_) {
-        return;
-      }
-      document.getElementById('score-text').innerText = scoreText;
     }
 
     // Función que actualiza los colliders de los objetos en la vista
