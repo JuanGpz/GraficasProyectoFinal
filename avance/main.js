@@ -1,7 +1,9 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
+import * as THREE from './three.module.js';
 
 import {player} from './player.js';
-import {world} from './world.js';
+import {lane1} from './lane1.js';
+import {lane2} from './lane2.js';
+import {lane3} from './lane3.js';
 import {background} from './background.js';
 
 const _VS = `
@@ -218,8 +220,10 @@ class BasicWorldDemo {
     });
     this.scene_.add(new THREE.Mesh(skyGeo, skyMat));
 
-    this.world_ = new world.WorldManager({scene: this.scene_});
-    this.player_ = new player.Player({scene: this.scene_, world: this.world_});
+    this.lane1_ = new lane1.Lane1({scene: this.scene_});
+    this.lane2_ = new lane2.Lane2({scene: this.scene_});
+    this.lane3_ = new lane3.Lane3({scene: this.scene_});
+    this.player_ = new player.Player({scene: this.scene_, lane1: this.lane1_, lane2: this.lane2_, lane3: this.lane3_});
     this.background_ = new background.Background({scene: this.scene_});
 
     this.gameOver_ = false;
@@ -254,7 +258,9 @@ class BasicWorldDemo {
     }
 
     this.player_.Update(timeElapsed);
-    this.world_.Update(timeElapsed);
+    this.lane1_.Update(timeElapsed);
+    this.lane2_.Update(timeElapsed);
+    this.lane3_.Update(timeElapsed);
     this.background_.Update(timeElapsed);
 
     if (this.player_.gameOver && !this.gameOver_) {

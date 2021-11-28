@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.122/build/three.module.js';
+import * as THREE from './three.module.js';
 
 import {math} from './math.js';
 

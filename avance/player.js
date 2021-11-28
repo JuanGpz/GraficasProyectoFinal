@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
+import * as THREE from './three.module.js';
 
 import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/FBXLoader.js';
 
@@ -73,16 +73,54 @@ export const player = (() => {
     }
 
     // Función para revisar colisiones entre el jugador y los obstaculos
-    CheckCollisions_() {
+    CheckCollisions1_() {
 
       // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
-      const colliders = this.params_.world.GetColliders();
+      const colliders1 = this.params_.lane1.GetColliders();
 
       // Usamos los colliders del mesh de nuestro personaje
       this.playerBox_.setFromObject(this.mesh_);
 
       // Comparamos los colliders del personaje con los colliders de los obstaculos
-      for (let c of colliders) {
+      for (let c of colliders1) {
+        const cur = c.collider;
+        
+        // Si los colliders del jugador y de algun obstaculo se intersectan se despliega la pantalla de derrota
+        if (cur.intersectsBox(this.playerBox_)) {
+          this.gameOver = true;
+        }
+      }
+    }
+
+    CheckCollisions2_() {
+
+      // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
+      const colliders2 = this.params_.lane2.GetColliders();
+
+      // Usamos los colliders del mesh de nuestro personaje
+      this.playerBox_.setFromObject(this.mesh_);
+
+      // Comparamos los colliders del personaje con los colliders de los obstaculos
+      for (let c of colliders2) {
+        const cur = c.collider;
+        
+        // Si los colliders del jugador y de algun obstaculo se intersectan se despliega la pantalla de derrota
+        if (cur.intersectsBox(this.playerBox_)) {
+          this.gameOver = true;
+        }
+      }
+    }
+
+    CheckCollisions3_() {
+
+      // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
+      const colliders3 = this.params_.lane3.GetColliders();
+
+      // Usamos los colliders del mesh de nuestro personaje
+      this.playerBox_.setFromObject(this.mesh_);
+
+      // Comparamos los colliders del personaje con los colliders de los obstaculos
+      for (let c of colliders3) {
         const cur = c.collider;
         
         // Si los colliders del jugador y de algun obstaculo se intersectan se despliega la pantalla de derrota
@@ -115,7 +153,10 @@ export const player = (() => {
       if (this.mesh_) {
         this.mixer_.update(timeElapsed);
         this.mesh_.position.copy(this.position_);
-        this.CheckCollisions_();
+        this.CheckCollisions1_();
+        this.CheckCollisions2_();
+        this.CheckCollisions3_();
+
       }
     }
   };
