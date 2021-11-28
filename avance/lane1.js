@@ -95,7 +95,7 @@ export const lane1 = (() => {{}
       obj.quaternion.setFromAxisAngle(
           new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2.0);
       obj.position.x = START_POS + offset;
-      obj.position.z = -7;
+      obj.position.z = -5;
       obj.scale = scale * 0.01;
       this.objects_.push(obj);
     }
@@ -121,7 +121,7 @@ export const lane1 = (() => {{}
       const closest = this.LastObjectPosition_();
       if (Math.abs(START_POS - closest) > this.separationDistance_) {
         this.SpawnCluster_();
-        this.separationDistance_ = math.rand_range(SEPARATION_DISTANCE, SEPARATION_DISTANCE * 1.5);
+        this.separationDistance_ = math.rand_range((SEPARATION_DISTANCE - 5), SEPARATION_DISTANCE * 1.5);
       }
     }
 

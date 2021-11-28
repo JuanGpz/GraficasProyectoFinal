@@ -14,7 +14,9 @@ export const player = (() => {
       this.playerBox_ = new THREE.Box3();
       this.params_ = params;
       this.LoadModel_();
-      this.InitInput_();
+      this.JumpInput_();
+      this.RightInput_();
+      this.LeftInput_();
     }
 
     // Función para cargar el modelo del personaje
@@ -42,7 +44,7 @@ export const player = (() => {
     }
 
     // Función para determinar el control del personaje
-    InitInput_() {
+    JumpInput_() {
       // Se elije la tecla a usar para controlar a la rana
       this.keys_ = {
         spacebar: false,
@@ -50,12 +52,36 @@ export const player = (() => {
       this.oldKeys = { ...this.keys_ };
 
       // Se agregan listeners para detectar cuando se presiona la tecla
-      document.addEventListener('keydown', (e) => this.OnKeyDown_(e), false);
-      document.addEventListener('keyup', (e) => this.OnKeyUp_(e), false);
+      document.addEventListener('keydown', (e) => this.JumpKeyDown_(e), false);
+      document.addEventListener('keyup', (e) => this.JumpKeyUp_(e), false);
+    }
+
+    RightInput_() {
+      // Se elije la tecla a usar para controlar a la rana
+      this.keys_ = {
+        ArrowRight : false,
+      };
+      this.oldKeys = { ...this.keys_ };
+
+      // Se agregan listeners para detectar cuando se presiona la tecla
+      document.addEventListener('keydown', (e) => this.RightKeyDown_(e), false);
+      document.addEventListener('keyup', (e) => this.RightKeyUp_(e), true);
+    }
+
+    LeftInput_() {
+      // Se elije la tecla a usar para controlar a la rana
+      this.keys_ = {
+        ArrowLeft: false,
+      };
+      this.oldKeys = { ...this.keys_ };
+
+      // Se agregan listeners para detectar cuando se presiona la tecla
+      document.addEventListener('keydown', (e) => this.LeftKeyDown_(e), false);
+      document.addEventListener('keyup', (e) => this.LeftKeyUp_(e), true);
     }
 
     // Switch para realizar un evento cuando se presiona la tecla
-    OnKeyDown_(event) {
+    JumpKeyDown_(event) {
       switch (event.keyCode) {
         case 32:
           this.keys_.space = true;
@@ -64,10 +90,44 @@ export const player = (() => {
     }
 
     // Switch para realizar un evento cuando se deja de presionar la tecla
-    OnKeyUp_(event) {
+    JumpKeyUp_(event) {
       switch (event.keyCode) {
         case 32:
           this.keys_.space = false;
+          break;
+      }
+    }
+
+    RightKeyDown_(event) {
+      switch (event.keyCode) {
+        case 39:
+          this.keys_.ArrowRight = true;
+          break;
+      }
+    }
+
+    // Switch para realizar un evento cuando se deja de presionar la tecla
+    RightKeyUp_(event) {
+      switch (event.keyCode) {
+        case 39:
+          this.keys_.ArrowRight = false;
+          break;
+      }
+    }
+
+    LeftKeyDown_(event) {
+      switch (event.keyCode) {
+        case 37:
+          this.keys_.ArrowLeft = true;
+          break;
+      }
+    }
+
+    // Switch para realizar un evento cuando se deja de presionar la tecla
+    LeftKeyUp_(event) {
+      switch (event.keyCode) {
+        case 37:
+          this.keys_.ArrowLeft = false;
           break;
       }
     }
@@ -132,22 +192,49 @@ export const player = (() => {
 
     // Función de update para el jugador
     Update(timeElapsed) {
-
+      
       // Una vez que se presiona espacio para iniciar el juego se le da al jugador una velocidad para que comienze a moverse
-      if (this.keys_.space && this.position_.y == 0.0) {
+      if (this.keys_.space && this.position_.y == 0) {
         // Variable para controlar la velocidad del personaje
         this.velocity_ = 30;
       }
-
       // Variable que controla la aceleración del personaje
       const acceleration = -75 * timeElapsed;
-
+      
       // Modificamos la posición en Y para que el personaje simule un salto
       this.position_.y += timeElapsed * (
-        this.velocity_ + acceleration * 0.5);
+      this.velocity_ + acceleration * 0.5);
       this.position_.y = Math.max(this.position_.y, 0.0);
       this.velocity_ += acceleration;
       this.velocity_ = Math.max(this.velocity_, -100);
+      
+      // Una vez que se presiona espacio para iniciar el juego se le da al jugador una velocidad para que comienze a moverse
+      if (this.keys_.ArrowRight && this.position_.z == 0) {
+        // Variable para controlar la velocidad del personaje
+        this.position_.z = 5;
+      }
+
+      if (this.keys_.ArrowRight && this.position_.z == -5) {
+        // Variable para controlar la velocidad del personaje
+        this.position_.z = 0;
+      }
+
+      if (this.keys_.ArrowLeft && this.position_.z == 0) {
+        // Variable para controlar la velocidad del personaje
+        this.position_.z = -5;
+      }
+
+      if (this.keys_.ArrowLeft && this.position_.z == 5) {
+        // Variable para controlar la velocidad del personaje
+        this.position_.z = 0;
+      }
+      
+      // // Modificamos la posición en Y para que el personaje simule un salto
+      // this.position_.z = 7
+      // this.velocity_ + acceleration * 0.5
+      // //this.position_.z = Math.max(this.position_.y, 0.0);
+      // this.velocity_ += acceleration;
+      // this.velocity_ = Math.max(this.velocity_, -100);
 
       // Ciclo para mover continuamente al personaje mientras no colisione
       if (this.mesh_) {

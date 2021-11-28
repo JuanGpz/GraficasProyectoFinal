@@ -119,7 +119,7 @@ export const lane2 = (() => {{}
       const closest = this.LastObjectPosition_();
       if (Math.abs(START_POS - closest) > this.separationDistance_) {
         this.SpawnCluster_();
-        this.separationDistance_ = math.rand_range(SEPARATION_DISTANCE, SEPARATION_DISTANCE * 1.5);
+        this.separationDistance_ = math.rand_range((SEPARATION_DISTANCE - 5), SEPARATION_DISTANCE * 1.5);
       }
     }
 
