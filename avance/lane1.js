@@ -2,6 +2,7 @@ import * as THREE from './three.module.js';
 import {math} from './math.js';
 import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/FBXLoader.js';
 
+// Define el nombre de la variable a exportar
 export const lane1 = (() => {{}
   
   //Indica la posición a partir de la cuál empiezan a aparecer los obstaculos.
@@ -29,7 +30,7 @@ export const lane1 = (() => {{}
       const loader = new FBXLoader();
       loader.setPath('./resources/Forest/FBX/');
 
-      // Se carga el modelo de arbusto #2
+      // Se carga el modelo de arbusto #2, se agregan texturas y color.
       loader.load('Bush_2.fbx', (fbx) => {
         fbx.scale.setScalar(0.01);
         this.mesh = fbx;
@@ -69,7 +70,7 @@ export const lane1 = (() => {{}
   }
 
   class Lane1 {
-    // Constructor de la clase del manejas, creadon el mundo vacío en un principio
+    // Constructor de la clase de la linea 1, maneja el score
     constructor(params) {
       this.objects_ = [];
       this.unused_ = [];
@@ -80,7 +81,7 @@ export const lane1 = (() => {{}
       this.separationDistance_ = SEPARATION_DISTANCE;
     }
 
-    // Usamos la función GetColliders en world.js para regresar los colliders de un objeto
+    // Usamos la función GetColliders para regresar los colliders de un objeto
     GetColliders() {
       return this.objects_;
     }

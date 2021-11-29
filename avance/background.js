@@ -1,14 +1,11 @@
 import * as THREE from './three.module.js';
-
 import {math} from './math.js';
-
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.122/examples/jsm/loaders/GLTFLoader.js';
-import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/FBXLoader.js';
 
-
+// Define el nombre de la variable a exportar
 export const background = (() => {
 
-  // Clase de nube con constructor que designa su posición, rotación, escala y carga el modelo
+  // Clase de nube con constructor que designa su posición, rotación, escala e invoca el método para cargar el modelo.
   class BackgroundCloud {
     constructor(params) {
       this.params_ = params;
@@ -20,7 +17,7 @@ export const background = (() => {
       this.LoadModel_();
     }
 
-    // Loader para el modelo de nube que elige uno de los tres modelos al azar asi como su escala
+    // Loader para el modelo de nube que elige uno de los tres modelos al azar, también elige una posición y un escala dentro de un rango al azar.
     LoadModel_() {
       const loader = new GLTFLoader();
       loader.setPath('./resources/Clouds/GLTF/');
@@ -83,6 +80,7 @@ export const background = (() => {
     }
   }
 
+  // Regresa Background para exportarse
   return {
       Background: Background,
   };

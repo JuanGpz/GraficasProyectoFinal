@@ -6,6 +6,7 @@ import {lane2} from './lane2.js';
 import {lane3} from './lane3.js';
 import {background} from './background.js';
 
+// VertexShader a usar para renderizar 
 const _VS = `
 varying vec3 vWorldPosition;
 void main() {
@@ -14,7 +15,8 @@ void main() {
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }`;
 
-  const _FS = `
+// Fragment Shader a usar para renderizar
+const _FS = `
 uniform vec3 topColor;
 uniform vec3 bottomColor;
 uniform float offset;
@@ -26,19 +28,22 @@ void main() {
 }`;
 
 // Clase para crear el mundo del juego
-class BasicWorldDemo {
+class CreateWorld_ {
   constructor() {
     this._Initialize();
-
+    // El juego no se inicia hasta dar un click en la pantalla inicial
     this._gameStarted = false;
     document.getElementById('game-menu').onclick = (msg) => this._OnStart(msg);
   }
 
+  // Función para cambiar el estado de inicio del juego
   _OnStart(msg) {
     document.getElementById('game-menu').style.display = 'none';
+    // Cambia la bandera para iniciar el juego
     this._gameStarted = true;
   }
 
+  // Función que inicializa la cámara, la luz, la escena y agrega los elementos a la escena
   _Initialize() {
     this.threejs_ = new THREE.WebGLRenderer({
       antialias: true,
@@ -58,46 +63,41 @@ class BasicWorldDemo {
     this.camera_.position.set(-5, 5, 10);
     this.camera_.lookAt(8, 3, 0);
 
+    // Se crea la escena
     this.scene_ = new THREE.Scene();
 
-    // Controles de la luz direccional
+    // Controles de la luz
     let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
     light.position.set(60, 100, 10);
     light.target.position.set(40, 0, 0);
-    light.castShadow = true;
-    light.shadow.bias = -0.001;
-    light.shadow.mapSize.width = 4096;
-    light.shadow.mapSize.height = 4096;
-    light.shadow.camera.far = 200.0;
-    light.shadow.camera.near = 1.0;
-    light.shadow.camera.left = 50;
-    light.shadow.camera.right = -50;
-    light.shadow.camera.top = 50;
-    light.shadow.camera.bottom = -50;
-    this.scene_.add(light);
 
+    this.scene_.add(light);
     light = new THREE.HemisphereLight(0x202020, 0x004080, 0.6);
+
+    // Se agrega la luz a la escena
     this.scene_.add(light);
 
+    // Color de fondo de la escena
     this.scene_.background = new THREE.Color(0x808080);
-    this.scene_.fog = new THREE.FogExp2(0x89b2eb, 0.00125);
 
+    // Se define la geometría y material de la tierra
     const ground = new THREE.Mesh(
         new THREE.PlaneGeometry(20000, 20000, 10, 10),
         new THREE.MeshStandardMaterial({
             color: 0x136935,
           }));
-    ground.castShadow = false;
-    ground.receiveShadow = true;
     ground.rotation.x = -Math.PI / 2;
     this.scene_.add(ground);
-
+    
+    // Se definen los colores 
     const uniforms = {
       topColor: { value: new THREE.Color(0x0077FF) },
       bottomColor: { value: new THREE.Color(0x89b2eb) },
       offset: { value: 33 },
       exponent: { value: 0.6 }
     };
+
+    // Define la geometría y material del cielo
     const skyGeo = new THREE.SphereBufferGeometry(1000, 32, 15);
     const skyMat = new THREE.ShaderMaterial({
         uniforms: uniforms,
@@ -107,6 +107,7 @@ class BasicWorldDemo {
     });
     this.scene_.add(new THREE.Mesh(skyGeo, skyMat));
 
+    // Agrega los carriles, al jugador y la clase de nubes a la escena
     this.lane1_ = new lane1.Lane1({scene: this.scene_});
     this.lane2_ = new lane2.Lane2({scene: this.scene_});
     this.lane3_ = new lane3.Lane3({scene: this.scene_});
@@ -118,21 +119,21 @@ class BasicWorldDemo {
     this.RAF_();
   }
 
+  // Función de request animation frame para mostrar los distintos cuadros de una animación
   RAF_() {
     requestAnimationFrame((t) => {
       if (this.previousRAF_ === null) {
         this.previousRAF_ = t;
       }
-
       this.RAF_();
-
-      this.Step_((t - this.previousRAF_) / 1000.0);
+      this.Update_((t - this.previousRAF_) / 1000.0);
       this.threejs_.render(this.scene_, this.camera_);
       this.previousRAF_ = t;
     });
   }
 
-  Step_(timeElapsed) {
+  // Función de update que actualiza las lineas, el personaje y el fondo
+  Update_(timeElapsed) {
     if (this.gameOver_ || !this._gameStarted) {
       return;
     }
@@ -143,6 +144,7 @@ class BasicWorldDemo {
     this.lane3_.Update(timeElapsed);
     this.background_.Update(timeElapsed);
 
+    // Detiene el update si se pierde
     if (this.player_.gameOver && !this.gameOver_) {
       this.gameOver_ = true;
       document.getElementById('game-over').classList.toggle('active');
@@ -150,8 +152,7 @@ class BasicWorldDemo {
   }
 }
 
-let _APP = null;
-
+// Carga el juego cuando se carga la ventana
 window.addEventListener('DOMContentLoaded', () => {
-  _APP = new BasicWorldDemo();
+ _APP = new CreateWorld_();
 });

@@ -1,3 +1,4 @@
+// Define el nombre de la variable a exportar
 export const math = (function() {
   return {
 

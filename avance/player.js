@@ -1,8 +1,7 @@
 import * as THREE from './three.module.js';
-
 import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/FBXLoader.js';
 
-
+// Define el nombre de la variable a exportar
 export const player = (() => {
 
   // Constructor de la clase de jugador con los parametros de posición, velocidad inicial, caja para collider, 
@@ -64,7 +63,7 @@ export const player = (() => {
       });
     }
 
-    // Función para determinar el control del personaje
+    // Función para controlar el salto
     JumpInput_() {
       // Se elije la tecla a usar para controlar a la rana
       this.keys_ = {
@@ -77,6 +76,7 @@ export const player = (() => {
       document.addEventListener('keyup', (e) => this.JumpKeyUp_(e), false);
     }
 
+    // Función para controlar movimiento a la derecha
     RightInput_() {
       // Se elije la tecla a usar para controlar a la rana
       this.keys_ = {
@@ -89,6 +89,7 @@ export const player = (() => {
       document.addEventListener('keyup', (e) => this.RightKeyUp_(e), false);
     }
 
+    // Función para controlar movimiento a la izquierda
     LeftInput_() {
       // Se elije la tecla a usar para controlar a la rana
       this.keys_ = {
@@ -119,6 +120,7 @@ export const player = (() => {
       }
     }
 
+    // Switch para realizar un evento cuando se presiona la tecla
     RightKeyDown_(event) {
       switch (event.keyCode) {
         case 39:
@@ -136,6 +138,7 @@ export const player = (() => {
       }
     }
 
+    // Switch para realizar un evento cuando se presiona la tecla
     LeftKeyDown_(event) {
       switch (event.keyCode) {
         case 37:
@@ -153,10 +156,10 @@ export const player = (() => {
       }
     }
 
-    // Función para revisar colisiones entre el jugador y los obstaculos
+    // Función para revisar colisiones entre el jugador y los obstaculos en la linea 1
     CheckCollisions1_() {
 
-      // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
+      // Usamos la función GetColliders para regresar los objetos a evaluar como parametros para CheckCollisions
       const colliders1 = this.params_.lane1.GetColliders();
 
       // Usamos los colliders del mesh de nuestro personaje
@@ -173,9 +176,10 @@ export const player = (() => {
       }
     }
 
+    // Función para revisar colisiones entre el jugador y los obstaculos en la linea 2
     CheckCollisions2_() {
 
-      // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
+      // Usamos la función GetColliders para regresar los objetos a evaluar como parametros para CheckCollisions
       const colliders2 = this.params_.lane2.GetColliders();
 
       // Usamos los colliders del mesh de nuestro personaje
@@ -192,9 +196,10 @@ export const player = (() => {
       }
     }
 
+    // Función para revisar colisiones entre el jugador y los obstaculos en la linea 3
     CheckCollisions3_() {
 
-      // Usamos la función GetColliders en world.js para regresar los objetos a evaluar como parametros para CheckCollisions
+      // Usamos la función GetColliders para regresar los objetos a evaluar como parametros para CheckCollisions
       const colliders3 = this.params_.lane3.GetColliders();
 
       // Usamos los colliders del mesh de nuestro personaje
@@ -228,30 +233,21 @@ export const player = (() => {
       this.velocity_ += acceleration;
       this.velocity_ = Math.max(this.velocity_, -100);
       
-      // Una vez que se presiona espacio para iniciar el juego se le da al jugador una velocidad para que comienze a moverse
+      // Mueve a la derecha al jugador si no está en el carril del extremo derecho
       if (this.keys_.ArrowRight) {
-        // Variable para controlar la velocidad del personaje
         if (this.position_.z < 5) {
           this.position_.z += 5;
           this.keys_.ArrowRight = false
         }
-        // this.position_.z = 5;
       }
 
+      // Mueve a la izquierda al jugador si no está en el carril del extremo izquierdo
       if (this.keys_.ArrowLeft == true) {
-        // Variable para controlar la velocidad del personaje
         if (this.position_.z > -5) {
           this.position_.z -= 5;
           this.keys_.ArrowLeft = false
         }
       }
-      
-      // // Modificamos la posición en Y para que el personaje simule un salto
-      // this.position_.z = 7
-      // this.velocity_ + acceleration * 0.5
-      // //this.position_.z = Math.max(this.position_.y, 0.0);
-      // this.velocity_ += acceleration;
-      // this.velocity_ = Math.max(this.velocity_, -100);
 
       // Ciclo para mover continuamente al personaje mientras no colisione
       if (this.mesh_) {
