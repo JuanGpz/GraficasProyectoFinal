@@ -29,3 +29,7 @@ Haremos un juego con gráficas 3D del género endless runner con elementos de si
 
 - La vista dentro del juego será isométrica. 
 - El mapa consiste de tres carriles (central, derecho e izquierdo) en los que se generan automáticamente obstáculos y recompensas, el mapa siempre estará en movimiento y el jugador debe evitar colisiones con obstáculos y provocarlas con las mariposas. 
+
+•	Referencias
+
+Usamos el tutorial de Basic World Demo en el siguiente repositorio: https://github.com/simondevyoutube/ThreeJS_Tutorial_BasicWorld
